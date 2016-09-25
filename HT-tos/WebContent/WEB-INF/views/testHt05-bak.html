@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Style Shape</title>
+<meta charset="UTF-8">
+<style>
+html, body {
+	background: #15518f;
+	padding: 0px;
+	margin: 0px;
+}
+
+.main {
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+</style>
+<script src="../js/ht/core/ht.js"></script>
+<script src="../js/ht/plugin/ht-edgetype.js"></script>
+<script src="../js/nodeData.js"></script>
+<script>
+	var dataModel = new ht.DataModel();
+	graphView = new ht.graph.GraphView(dataModel);
+    graphView.setZoom(0.7);
+	function init() {
+		view = graphView.getView();
+		map.forEach(function(line, lineIndex) {
+			var nodeList = new Array();
+			for (var i = 0; i < line.length; i++) {
+				var data = line[i];
+				var node = createNodeByData(data);//创建节点
+				nodeList.push(node);//存储节点，便于创建连线
+			}
+			for(var i=0;i<nodeList.length-1;i++){//创建连线
+				var node1 = nodeList[i];
+				var node2 = nodeList[i+1];
+				createEdgeByData(node1,node2);
+			}
+		});
+		view.className = 'main';
+		graphView.setLayers([ 1, 2 ]);
+		document.body.appendChild(view);
+
+	}
+
+	function createNodeByData(data) {
+		var nodeType = data.nodeType;
+		var node;
+		if(nodeType==1){//1-小圆点
+			node = createNode1(data,1);
+		}else if(nodeType==2){//2-横向圆角矩形
+			node = createNode2(data,1);
+		}else if(nodeType==3){//3-纵向圆角矩形
+			node = createNode2(data,2);
+		}else if(nodeType==4){//4-叶节点
+			node = createNode1(data,2);
+		}
+		return node;
+	}
+	
+    function createNode1(data,type){//小圆点
+    	var node = new ht.Node();
+    	node.setPosition(data.position.x, data.position.y);
+    	node.setWidth(15);
+    	node.setHeight(15);
+    	node.s(nodeStyle);
+    	if(type==2){
+    		node.s('shape.background','#c8c8c8');
+    	}
+    	node.s("label.offset.x", -(data.name_ch.length * 10) - 5);
+    	node.s("label.offset.y", -20);
+    	node.a("pointIndex", data.index);
+    	node.a("type", "station");
+    	node.a('edgeType',data.edgeType);
+    	node.setName(data.name_ch);
+    	node.setLayer(2);
+    	dataModel.add(node);
+    	return node;
+    }
+    
+    function createNode2(data,type){//横向、纵向圆角矩形
+    	var node = new ht.Node();
+        node.setName(data.name_ch);
+        if(type==1){
+	        node.setSize(40, 20);                    
+        }else{
+	        node.setSize(20, 40);
+        }
+        node.setPosition(data.position.x,data.position.y);
+        node.s('shape', 'roundRect'); 
+        node.s('label.color' , 'white');
+        node.a('edgeType',data.edgeType);
+        node.s('shape.border.width', 5); 
+        node.s("shape.background", 'white');
+        node.s("2d.selectable", false);
+        node.s('shape.border.color', '#c8c8c8'); 
+        node.s('shape.corner.radius', 10); 
+        node.setLayer(2);
+        dataModel.add(node);
+        return node;
+    }
+    
+    function createEdgeByData(node1,node2){
+    	var edgeType = node1.a('edgeType').next;
+    	var typeOrStyle = getStyleByType(edgeType);
+    	createEdge(node1,node2,typeOrStyle);
+     	edgeType = node2.a('edgeType').last;
+    	typeOrStyle = getStyleByType(edgeType);
+    	createEdge(node2,node1,typeOrStyle);  
+    }
+
+    function createEdge(sourceNode, targetNode,  typeOrStyle){
+        var edge = new ht.Edge(sourceNode, targetNode);
+        edge.s(typeOrStyle); 
+        edge.setLayer(1);
+        dataModel.add(edge);
+    }  
+    function getStyleByType(edgeType){
+    	if(edgeType==0){
+    		return {
+    			'edge.width' : 3,
+    			'edge.type': 'points',
+    			'edge.center' : true,
+    			'edge.corner.radius': 5,
+    			'edge.color' : '#00ebb3'
+    		};
+    	}else if(edgeType==1){
+    		return {
+    	        'edge.type': 'flex',
+    	        'edge.width': 5,
+                'edge.color': '#00ebb3',
+    	        'edge.gap': 10
+    	    }; 
+    	}else if(edgeType==2){
+    		return {
+    	        'edge.type': 'h.v',
+    	        'edge.width': 5,
+                'edge.color': '#00ebb3',
+    	        'edge.gap': 10,
+    	        'edge.corner.radius': 5
+    	    };
+    	}else if(edgeType==3){
+    		return {
+    	        'edge.type': 'v.h',
+    	        'edge.gap': 10
+    	    };
+    	}else if(edgeType==4){
+    		return {
+    	        'edge.type': 'v.h',
+    	        'edge.width': 5,
+                'edge.color': '#00ebb3',
+    	        'edge.gap': 10,
+    	        'edge.corner.radius': 5
+    	    };
+    	}
+    }
+
+	var nodeStyle = {
+			'shape' : 'circle',
+			'select.border.width' : 2,
+			'shape.background' : 'white',
+			'shape.border.color' : '#c8c8c8',
+			'shape.border.width' : 4,
+			'select.width' : 0,
+			'label.color' : 'white'
+		};
+	var edgeStyle = {
+			'edge.width' : 3,
+			'edge.type': 'points',
+			'edge.center' : true,
+			'edge.corner.radius': 5,
+			'edge.color' : '#00ebb3'
+		};
+</script>
+</head>
+<body onload="init();">
+</body>
+</html>
