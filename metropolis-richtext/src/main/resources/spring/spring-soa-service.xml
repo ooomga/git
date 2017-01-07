@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:sca="http://www.springframework.org/schema/sca"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/sca 
+        http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd
+		">
+
+	<!-- bean-name 接口类名（统一命名规则：接口I代表字符去掉后第一个字母小写其余字母保持不变。如：IUserService命名userService,ITestService命名testService） -->
+	<bean name="/testService" class="com.odianyun.soa.provider.SoaWebserviceExporter">
+		<property name="providerConfig" ref="providerConfig"></property>
+		<property name="service" ref="testServiceImpl"></property>
+		<property name="serviceInterface" value="net.juntech.service.test.ITestService"></property>
+		<property name="serviceVersion" value="0.1"></property>
+	</bean>
+	
+	<!-- departmentService-->
+	<bean name="/richTextService" class="com.odianyun.soa.provider.SoaWebserviceExporter">
+		<property name="providerConfig" ref="providerConfig"></property>
+		<property name="service" ref="richTextServiceImpl"></property>
+		<property name="serviceInterface" value="net.juntech.service.richtext.IRichTextService"></property>
+		<property name="serviceVersion" value="0.1"></property>
+	</bean>
+
+</beans>

@@ -1,0 +1,28 @@
+package net.juntech.service.station;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * <ul>
+ * <li>GQG 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+public interface ILineService {
+	/**
+	 * 查询线路
+	 * <ul>
+	 * <li>GQG 2016年12月27日 新建</li>
+	 * </ul>
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public Map<String, Object> getLineList(Map<String, Object> params);
+	//添加线路
+	public Map<String, Object> saveLine(Map<String, Object> params);
+	//逻辑删除线路
+	public Map<String, Object> delLine(Map<String, Object> params);
+}

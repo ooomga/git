@@ -1,0 +1,24 @@
+package net.juntech.controller.station;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import net.juntech.controller.base.BaseWebController;
+
+/**
+ * <ul>
+ * <li>xhl 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+public class StationManageController extends BaseWebController {
+
+	@RequestMapping(value = "toExitManage")
+	public String toExitManage() {
+		
+		return "station.exitManage";
+	}
+
+}

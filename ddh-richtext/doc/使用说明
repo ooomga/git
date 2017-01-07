@@ -1,0 +1,107 @@
+1、目录结构
+	1.1、src/main/java
+		net.juntech
+			base		存放常量池，访问连接地址
+			Controller	控制层代码
+				base	控制层使用的通用代码
+				其余以模块、功能进行文件分类
+			dao			持久层代码
+			develop		架构开发相关配置，spring启动加载，定时器等
+			Entity		实体类
+			service		业务代码
+				base	业务层使用的通用代码
+				其余以模块、功能进行文件分类
+			util		工具组件
+	1.2、src/main/resources
+		db				数据库库配置
+		mybatis			mybatis相关配置
+		spring			spring配置
+	1.3、doc
+		数据库			数据库文件
+		注释				注释注意事项
+		maven			maven配置说明
+	1.4、src/main/webapp/WEB-INF
+		resource
+			develop		项目中的js，css，图片信息
+			Plugin		使用的插件
+		view
+			base		基础页面
+			common		通用页面
+			其余以模块、功能进行文件分类
+2、开发说明
+	2.1、命名规范
+		代码
+			驼峰命名
+			Controller
+				页面跳转			to功能、页面
+				页面功能添加、修改	edit功能、表
+				页面功能删除		del功能、表
+				页面功能查看
+					详情			view功能、表
+					列表			list功能、表
+			service
+				添加				add功能、表
+				删除				delete功能、表
+				修改				update功能、表
+				查询
+					列表			select表List（可根据条件添加By条件）（根据功能添加For功能）
+					详情			select表（可根据条件添加By条件）（根据功能添加For功能）
+					--可根据条件添加By条件	ps：selectUserByName	根据用户名称查询用户信息	ps：selectUserListByName	查询所有用户名称是某某的数据
+					--根据功能添加For功能	ps：selectUserForMange 查询用户信息用于管理功能	ps：selectUserListForManage	查询所有用户信息用于管理
+		数据库
+			表
+				一种驼峰命名	ps：userInfo		用户信息表
+				一种下划线命名	ps：t_user_info	用户信息表（t代表table表，v代表view视图）
+			属性
+				一种驼峰命名	ps：userName		用户名称
+				一种下划线命名	ps：user_name	用户名称
+				驼峰命名：在生成持久层时需要修改src/main/resources/mybatis/generator.xml 文件中的 <table> 的子属性useActualColumnNames的值为true
+				下划线命名：生成实体后属性名自动变为驼峰形式（以下划线分隔）
+	2.2、mybatis
+		生成持久层代码时需要设置src/main/resources/mybatis/generator.xml
+			<table>	表
+				tableName					表名
+				domainObjectName			生成的实体名称
+				<property>					子参数设置
+					useActualColumnNames	是否按照数据库字段进行生成实体类属性，true与数据库字段一样，false（默认值）以下划线后进行驼峰命名
+		配置完成后执行src/main/java/net/juntech/develop/mybatis/GeneratorMybatis.java 中main方法即可生成实体，实体生成后需要刷新整个项目（F5、refresh）
+	2.3、Controller
+		BaseWebController	用于网页端开发继承
+		BaseApiController	用于移动端开发继承
+		类
+			使用Controller必须为每个控制层的类名前添加注解@Controller
+				ps：
+					@Controller
+					public class UserController extends BaseWebController{}
+			@RequestMapping("请求url")如果添加了请求url在请求这个类下的所有方法时必须添加这个请求url
+		方法
+			所有请求地址以：功能请求地址.htm命名（方便后续出现新的视图解析操作）
+			为方法名提供跳转路径设置@RequestMapping(value = "功能请求地址.htm", method = RequestMethod.(POST、GET))在方法的前面
+				ps:
+					@RequestMapping(value = "toTest.htm", method = RequestMethod.POST)
+					public void toTest(Model model) {}
+			参数：model 用于向视图返回数据，以键值对返回
+			返回值
+				String		
+					"temp/test"				访问view下temp下的test.jsp页面，具体页面（路径为src/main/webapp/WEB-INF/view下的相对路径，页面因视图解析器只能是jsp页面）
+					"redirect:功能请求地址.htm"	重定向带某个方法请求地址
+					BaseWebController
+						String redirectUrl(String url);			重定向到某个方法，重定向参数传递需要在控制层方法中添加参数RedirectAttributes,然后调用addFlashAttribute传递参数;
+				void		返回json数据
+					BaseController
+						void writeJson(obj)						返回任何对象转换后的json格式
+						void write(obj)							写出字符串数据带前台
+					BaseWebController
+						void writeGridJson(map) 				返回jqgrid表格插件需要的json格式数据
+						void forwardUrl("功能请求地址.htm")			转发某个方法请求地址，如果需要传递参数需要在request中设置
+					BaseApiController
+						void writeApiJson(TreeMap,isEncrypt)	返回移动端需要的json格式的数据	isEncrypt：是否进行加密
+			方法返回值为String时，返回具体页面
+				ps：
+					@RequestMapping(value = "toTest.htm", method = RequestMethod.POST)
+					public String toTest() {return:"";}
+					
+			
+	2.4、service
+		BaseService
+		

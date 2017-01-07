@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- @see http://generator.sturgeon.mopaas.com/index.html -->
+
+<!-- 配置生成器 -->
+<generatorConfiguration>
+	<!-- 可以用于加载配置项或者配置文件;resource：配置资源加载相对地址,url：配置资源加载绝对地址;注意，两个属性只能选址一个; -->
+	<properties resource="db/db.properties" />
+
+	<!-- 数据库驱动包 -->
+	<classPathEntry location="C:/Users/Juntech/.m2/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar" />
+
+	<context id="mysql" defaultModelType="flat" targetRuntime="MyBatis3">
+		<!-- 生成的Java文件的编码 -->
+		<property name="javaFileEncoding" value="UTF-8" />
+
+		<!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+		<property name="beginningDelimiter" value="`" />
+		<property name="endingDelimiter" value="`" />
+
+
+		<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Criteria" />
+		</plugin>
+
+		<!-- 分页插件 -->
+		<plugin type="net.juntech.develop.mybatis.GeneratorMybatis" />
+		<!-- 序列号插件 -->
+		<plugin type="net.juntech.develop.mybatis.PluginSerializable" />
+		<!-- 自定义注释 -->
+		<commentGenerator type="net.juntech.develop.mybatis.PluginComment" />
+
+		<!-- 必须要有的，使用这个配置链接数据库; -->
+		<jdbcConnection driverClass="${dbcp.driver}" connectionURL="${dbcp.URL}" userId="${dbcp.name}" password="${dbcp.password}">
+			<!-- 这里面可以设置property属性，每一个property属性都设置到配置的Driver上 -->
+		</jdbcConnection>
+
+		<!-- java类型处理器 -->
+		<javaTypeResolver>
+			<!-- false：默认,{BigDecimal:scale>0;length>18}、{Long:scale=0;length[10,18]}、{Integer:scale=0;length[5,9]}、{Short:scale=0;length<5} -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+
+		<!-- java模型创建器 -->
+		<javaModelGenerator targetPackage="net.juntech.entity" targetProject="src/main/java">
+			<!-- 在targetPackage的基础上，根据数据库的schema(数据库名)再生成一层package，最终生成的类放在这个package下，默认为false -->
+			<property name="enableSubPackages" value="true" />
+			<!-- 设置是否在getter方法中，对String类型字段调用trim()方法 -->
+			<property name="trimStrings" value="true" />
+			<!-- 设置基础的实体对象 -->
+			<!-- <property name="rootClass" value="net.juntech.entity.base.BaseEntity" /> -->
+		</javaModelGenerator>
+
+
+		<!-- 生成SQL map的XML文件生成器 -->
+		<!-- 注意，在Mybatis3之后，我们可以使用mapper.xml文件+Mapper接口（或者不用mapper接口），或者只使用Mapper接口+Annotation -->
+		<!-- 如果 javaClientGenerator配置中配置了需要生成XML的话，这个元素就必须配置targetPackage/targetProject:同javaModelGenerator -->
+		<sqlMapGenerator targetPackage="net.juntech.dao.xml" targetProject="src/main/java">
+			<!-- 在targetPackage的基础上，根据数据库的schema(数据库名)再生成一层package，最终生成的类放在这个package下，默认为false -->
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+
+		<!-- 对于mybatis来说，即生成Mapper接口，注意，如果没有配置该元素，那么默认不会生成Mapper接口 -->
+		<javaClientGenerator targetPackage="net.juntech.dao.mapper" type="XMLMAPPER" targetProject="src/main/java">
+			<!-- 在targetPackage的基础上，根据数据库的schema(数据库名)再生成一层package，最终生成的类放在这个package下，默认为false -->
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- ************************************以下是手动添加需要生成的表******************************************* -->
+
+		<!-- 选择一个table来生成相关文件，可以有一个或多个table，必须要有table元素 -->
+		<!-- <table tableName="表名" domainObjectName="实体类名称"> -->
+			<!-- 与数据库字段一样(区分大小写) -->
+			<!-- <property name="useActualColumnNames" value="true" /> -->
+		<!-- </table> -->
+		
+		<table tableName="t_role" domainObjectName="RoleEntity">
+			<!-- 与数据库字段一样(区分大小写) -->
+			<property name="useActualColumnNames" value="true" />
+		</table>
+
+		<!-- <table tableName="temp" domainObjectName="TempEntity" /> -->
+
+	</context>
+</generatorConfiguration>

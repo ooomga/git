@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:sca="http://www.springframework.org/schema/sca"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/sca 
+        http://www.osoa.org/xmlns/sca/1.0/spring-sca.xsd
+		">
+
+
+	<!-- 一个应用只需要配置一个providerConfig -->
+	<bean name="providerConfig" class="com.odianyun.soa.provider.ProviderConfig">
+		<!-- http://127.0.0.1:端口号/项目名/模块名/接口 与下面一一对应 -->
+		<!-- 公司 -->
+		<property name="domainName" value="juntech"></property>
+		<!--项目名 -->
+		<property name="serviceName" value="metropolis-station"></property>
+		<property name="assembleAppName" value="true"></property>
+		<!-- 模块名 -->
+		<property name="urlPattern" value="station"></property>
+		<!-- 端口号 -->
+		<property name="port" value="8080"></property>
+	</bean>
+
+</beans>

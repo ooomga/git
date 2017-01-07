@@ -1,0 +1,250 @@
+code：
+	400			错误
+	200			请求成功
+请求地址：
+	http://10.2.7.113:7080/metropolis-api
+
+用户登陆
+	/mobile/user/login
+	参数：
+		参数					描述			是否必传		备注
+		account				用户名		是	
+		password			密码			是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {
+		        "id": "bee43308430243fa8e19d287f33ea635",	用户id
+		        "account": "18584506987", 用户账号
+		        "status": "normal",	状态 normal正常disable停用
+		        "type": 1,	类型（1个人，2乘客）
+		        "registDate": 1483154343000	注册时间
+		        "headImg": "/resources/develop/image/defult/head_default.jpg",	头像
+		        "score": 523,	积分
+		        "headImg_full": "http://10.2.7.113:7080/metropolis-api/resources/develop/image/defult/head_default.jpg" 头像全地址,
+			    "uuid": "6aaca7c329814f858e1fbefeda230579"
+		    },
+		    "msg": "登陆成功",
+		    "emsg": ""
+		}
+快速登录
+	/mobile/user/mobileLogin
+	参数：
+		参数					描述			是否必传		备注
+		mobile				手机号		是	
+		code				验证码		是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {
+		        "isFrist": "1"
+		    },
+		    "msg": "验证通过",
+		    "emsg": ""
+		}
+发送验证码
+	/mobile/common/sendMobileCode
+	参数：
+		参数					描述			是否必传		备注
+		mobile				手机号码		是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "emsg": "",
+		    "msg": "验证码已发送"
+		}
+验证验证码
+	/mobile/common/verifyMobileCode
+	参数：
+		参数					描述			是否必传		备注
+		mobile				手机号码		是
+		code				验证码		是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "msg": "验证通过",
+		    "emsg": ""
+		}
+注册
+	/mobile/user/regist
+	参数：
+		参数					描述			是否必传		备注
+		account				账号			是
+		password			密码		是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "msg": "注册成功"
+		    "emsg": ""
+		}
+修改密码
+	/mobile/user/updPassword
+	参数：
+		参数					描述			是否必传		备注
+		account				账号			是
+		password			密码			是
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "msg": "密码修改成功",
+		    "emsg": ""
+		}
+查询资讯信息类型
+	/mobile/info/listInfoTypeAll
+	参数：
+		参数					描述			是否必传		备注
+	返回值：
+		{
+		    "code": 200,
+		    "data": [
+		        {
+		            "id": "38ea65df19914c229986961b16907bcc",	类型id
+		            "typeName": "政治" 类型名称
+		        },
+		        {
+		            "id": "3cd0283fabd84e82a64d516e2894e425",
+		            "typeName": "娱乐"
+		        },
+		        {
+		            "id": "c6cb4fb902e54281896f2f304dec11d9",
+		            "typeName": "军事"
+		        }
+		    ],
+		    "msg": "请求成功"
+		}
+查询资讯信息列表
+	/mobile/info/listInfo
+	参数：
+		参数					描述			是否必传		备注
+		pageIndex			账号			否			当前页数（需要分页时）
+		pageSize			密码			否			每页显示数（需要分页时）
+		typeId				类型Id		否			查询全部不需要填写
+	返回值：
+		{
+		    "code": 200,
+		    "data": {
+		        "totalRecords": 19,	总条数
+		        "pageIndex": 1,	当前第几页
+		        "totalPage": 10, 总页数
+		        "pageSize": 2,	每页显示数
+		        "list": [
+		            {
+		                "title": "GGGGGG",	标题
+		                "image": "\\upload\\richtext\\1483095957433.gif",	图片
+		                "createTime": 1483095957000,	创建时间
+		                "typeId": "c6cb4fb902e54281896f2f304dec11d9",	类型id
+		                "typeName": "军事",	类型名称
+		                "description": "",	描述
+		                "image_full": "http://10.2.7.113:7080/metropolis-api\\upload\\richtext\\1483095957433.gif",	图片网络地址
+		                "grapType": "1",	图文类型1图片，2视频
+		                "url": "http://10.2.7.113:7080/metropolis/richtext/viewRichText?id=2bd1834be0e849deb60855ac4340774f"	详情地址
+		            }
+		        ]
+		    },
+		    "msg": "请求成功"
+		}
+地址保存
+	/mobile/address/saveAddress
+	参数：
+		参数					描述			是否必传		备注
+		uuid				登陆后的uuid	是			
+		address				地址			是			
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "msg": "请求成功"
+		}
+地址查询
+	/mobile/address/listAddress
+	参数：
+		参数					描述			是否必传		备注
+		uuid				登陆后的uuid	是			
+	返回值：
+		{
+		    "code": 200,
+		    "data": [
+		        {
+		            "id": "58dccfb914d846aabd224a9375e94b7d", 地址id
+		            "userId": "bee43308430243fa8e19d287f33ea635",	用户id
+		            "address": "北京市天安门大门一号楼", 地址名称
+		            "default": 1	是否默认（0是，1不是）
+		        }
+		    ],
+		    "msg": "请求成功"
+		}
+保存积分
+	/mobile/socre/saveSocre
+	参数：
+		参数					描述			是否必传		备注
+		uuid				登陆后的uuid	是		
+		score				分数
+		type				加减（1加0减）
+		description			积分来源
+	返回值：
+		{
+		    "code": 200,
+		    "data": {},
+		    "msg": "请求成功"
+		}
+积分流水
+	/mobile/socre/listSocreAll
+	参数：
+		参数					描述			是否必传		备注
+		uuid				登陆后的uuid	是		
+		pageIndex			账号			否			当前页数（需要分页时）
+		pageSize			密码			否			每页显示数（需要分页时）
+	返回值：
+		{
+		    "code": 200,
+		    "list": [
+		        {
+		            "score": 100, 分数
+		            "type": 1, 加减（1加0减）
+		            "description": "签到", 积分来源
+		            "createDate": 1483341880000 创建时间
+		        },
+		        {
+		            "score": 100,
+		            "type": 1,
+		            "description": "签到",
+		            "createDate": 1483341780000
+		        }
+		    ],
+		    "msg": "请求成功",
+		    "pageIndex": 1,
+		    "pageSize": 2,
+		    "totalPage": 0,
+		    "totalRecords": 0
+		}
+根据线路查询站点
+	/mobile/station/listLine
+	参数：
+		参数					描述			是否必传		备注
+		lineCode			线路代码		是		
+		pageIndex			账号			否			当前页数（需要分页时）
+		pageSize			密码			否			每页显示数（需要分页时）
+	返回值：
+		{
+		    "code": 200,
+		    "list": [
+		        {
+		            "stationCode": "0311",	站点id
+		            "stationName": "上海南站",	站点名称
+		            "stationEName": "",	站点英文名称
+		            "lineCode": "3",	线路代码
+		            "extraLine": [
+		                "1"		可换乘的线路
+		            ]
+		        },
+		    ],
+		    "msg": "",
+		    "pageIndex": 1,
+		    "pageSize": 2,
+		    "totalPage": 0,
+		    "totalRecords": 0
+		}

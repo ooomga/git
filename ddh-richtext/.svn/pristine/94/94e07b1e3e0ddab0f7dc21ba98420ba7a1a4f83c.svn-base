@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<!-- 加载数据库配置文件 -->
+	<bean id="config" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:/db/db.properties"></property>
+	</bean>
+
+	<!-- 配置数据库连接池(DBCP) -->
+	<bean id="dbcpDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- 驱动 -->
+		<property name="driverClassName" value="${dbcp.driver}" />
+		<!-- URL -->
+		<property name="url" value="${dbcp.URL}" />
+		<!-- 用户名 -->
+		<property name="username" value="${dbcp.name}" />
+		<!-- 密码 -->
+		<property name="password" value="${dbcp.password}" />
+		<!-- **********************连接数********************* -->
+		<!-- 初始化连接数量 default:0 -->
+		<property name="initialSize" value="${dbcp.initialSize}" />
+		<!-- 最大使用连接数量 default:8(非正数不限制) -->
+		<property name="maxActive" value="${dbcp.maxActive}" />
+		<!-- 最大空闲连接数量 default:8(负数为不限制) -->
+		<property name="maxIdle" value="${dbcp.maxIdle}" />
+		<!-- 最小空闲连接数量 default:0 -->
+		<property name="minIdle" value="${dbcp.minIdle}" />
+		<!-- 最大等待时间(毫秒) default:-1(无限) -->
+		<property name="maxWait" value="${dbcp.maxWait}" />
+		<!-- **********************连接泄露回收********************** -->
+		<!-- 是否删除泄露的连接 default:false -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 泄露连接超时值(秒) default:300 -->
+		<property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}" />
+		<!-- **********************事务********************** -->
+		<!-- 是否开启自动提交 default:true -->
+		<property name="defaultAutoCommit" value="true" />
+	</bean>
+
+	<!-- mybatis 使用注解 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dbcpDataSource" />
+		<property name="mapperLocations" value="classpath:net/juntech/dao/xml/*Mapper.xml" />
+		<!-- 实体类 -->
+		<property name="typeAliasesPackage" value="net.juntech.entity" />
+	</bean>
+	<!-- 配置扫描接口(.java)，实现注解注入 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="net.juntech.dao.mapper" />
+	</bean>
+
+	<!-- JDBC -->
+	<!-- common数据层配置,springjdbc注入配置 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dbcpDataSource"></property>
+	</bean>
+
+
+</beans>

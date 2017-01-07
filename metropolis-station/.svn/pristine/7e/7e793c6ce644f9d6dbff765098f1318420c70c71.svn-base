@@ -1,0 +1,26 @@
+package net.juntech.service.message;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+/**
+ * <ul>
+ * <li>GQG 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+public interface IMessageService {
+	//查询公示信息
+	public Map<String,Object> selectMessage(Map<String,Object> params);
+	//新增
+	public Map<String,Object> insertMessage(Map<String,Object> params);
+	//发布信息
+	public Map<String,Object> publishMessage(Map<String,Object> params);
+	//查询信息内容
+	public Map<String,Object> selectMessageInfo(Map<String,Object> params);
+	//逻辑删除
+	public Map<String,Object> delMessage(Map<String,Object> params);
+}

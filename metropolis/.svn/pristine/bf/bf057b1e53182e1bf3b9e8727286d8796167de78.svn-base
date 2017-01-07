@@ -1,0 +1,22 @@
+package net.juntech.service.permission;
+
+import java.util.Map;
+
+/**
+ * <ul>
+ * <li>Dave 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+public interface IPermissionService {
+	//查询权限分页数据
+	public Map<String,Object>  getPermissionList(Map<String,Object> params);
+	//保存权限信息
+	public Map<String,Object>  savePermission(Map<String,Object> params);
+	//逻辑删除
+	public Map<String, Object> delPermission(Map<String, Object> param);
+	//查询权限详情
+	Map<String, Object> viewPermission(Map<String, Object> params);
+
+}

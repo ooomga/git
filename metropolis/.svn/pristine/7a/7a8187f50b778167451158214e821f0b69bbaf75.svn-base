@@ -1,0 +1,57 @@
+$("#form").validate({
+	ignore : ":hidden",
+	rules : {
+		wordsType : {
+			required : true,
+		},
+		forbiddenWords : {
+			required : true,
+		},
+	},
+	messages : {
+		wordsType : {
+			required : "标题不能为空",
+			maxlength : "标题超出长度限制{0}",
+		},
+		forbiddenWords : {
+			required : "展示状态必须选择",
+		},
+	},
+	// 指定错误信息位置
+	errorPlacement : function(error, element) {
+		// 如果是radio或checkbox
+		error.css('color', 'red');
+		if (element.is(':radio') || element.is(':checkbox')) {
+			var eid = element.attr('name'); // 获取元素的name属性
+			error.appendTo(element.parent()); // 将错误信息添加当前元素的父结点后面
+		} else {
+			error.insertAfter(element);
+		}
+	},
+	submitHandler : function(form) {
+		dubug: true
+		submit(form);
+	},
+});
+submit = function(form) { // 表单提交后更新页面显示的数据
+	$.ajax({
+		type : "POST",
+		url : form.action,
+		dataType : "json",
+		data : $(form).serialize(),
+		success : function(data) {
+			if (data.row > 0) {
+				window.parent.layer.msg("数据保存成功");
+				// dataGrid.refreshData();
+				window.parent.history.go(0);
+				window.parent.$(".layui-layer-close").click();
+			} else {
+				window.parent.layer.msg("数据保存失败");
+			}
+		},
+		error : function(data) {
+			window.parent.layer.msg("请求失败");
+			console.info(data)
+		},
+	});
+}

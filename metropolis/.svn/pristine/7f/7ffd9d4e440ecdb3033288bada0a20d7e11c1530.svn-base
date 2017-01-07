@@ -1,0 +1,42 @@
+package net.juntech.controller.permission;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.juntech.constant.ProjectName;
+import net.juntech.controller.base.BaseController;
+import net.juntech.service.permission.IPermissionService;
+import net.juntech.util.ObjectUtil;
+import net.juntech.util.zk.ClientProUtil;
+
+/**
+ * <ul>
+ * <li>Dave 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+public class PermissionController extends BaseController {
+	
+	
+	@RequestMapping(value="/permission/toPermission")
+	public String toPermisisonList(){
+		return "permissionList";
+	}
+	
+	@RequestMapping(value = "/permission/searchPermission")
+	public void getPermissionList(@RequestParam Map<String, Object> param) throws IOException {
+		super.setSearchParam(param, null, null);
+
+		IPermissionService perService = ClientProUtil.createInterface(IPermissionService.class, ProjectName.METROPOLIS_PERMISSION, "permissionService");
+		Map<String, Object> data = perService.getPermissionList(param);
+		System.err.println(ObjectUtil.objToJson(data));
+		writeGridJson(data);
+	}
+
+}

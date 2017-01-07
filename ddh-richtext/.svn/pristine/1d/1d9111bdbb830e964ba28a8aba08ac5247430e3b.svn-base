@@ -1,0 +1,218 @@
+package net.juntech.controller.base;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import net.juntech.util.ObjectUtil;
+
+/**
+ * <ul>
+ * <li>xn001 2016年5月5日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+/**
+ * @author xhl
+ *
+ */
+@Controller
+public class BaseWebController extends BaseController {
+
+	private static Log log = LogFactory.getLog(BaseWebController.class);
+
+	/**
+	 * 初始化路径
+	 * <ul>
+	 * <li>xhl 2016年5月5日 新建</li>
+	 * </ul>
+	 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@ModelAttribute
+	private void init(HttpServletRequest request, HttpServletResponse response, Model model) {
+		this.request = request;
+		this.response = response;
+		this.session = request.getSession();
+	}
+
+	/**
+	 * url转发
+	 * 
+	 * <ul>
+	 * <li>xhl 2016年5月9日 新建</li>
+	 * </ul>
+	 * 
+	 * @param url
+	 *            转发的地址
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void forwardUrl(String url) throws ServletException, IOException {
+		request.getRequestDispatcher(url).forward(this.request, this.response);
+	}
+
+	/**
+	 * url重定向
+	 * 
+	 * <ul>
+	 * <li>xhl 2016年5月9日 新建</li>
+	 * </ul>
+	 * 
+	 * @param url
+	 *            转发的地址
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected String redirectUrl(String url) throws ServletException, IOException {
+		return "redirect:" + url;
+	}
+
+	/**
+	 * 转换grid需要的json格式的数据
+	 * <ul>
+	 * <li>xhl 2016年5月18日 新建</li>
+	 * </ul>
+	 * 
+	 * @param jsonObj
+	 * @throws IOException
+	 */
+	protected void writeGridJson(Map<String, Object> map) throws IOException {
+		PrintWriter writer = null;
+		this.response.setHeader("Content-type", "text/plan;charset=UTF-8");
+		try {
+			writer = this.response.getWriter();
+		} catch (IOException e) {
+			log.error("json数据写到页面是错误", e);
+		}
+
+		Map<String, Object> grid = new HashMap<>();
+		grid.put("rows", map.get("list"));
+		grid.put("page", map.get("pageIndex"));
+		grid.put("total", map.get("totalPage"));
+		grid.put("records", map.get("totalRecords"));
+
+		String json = ObjectUtil.objToJson(grid);
+		writer.write(json);
+		writer.flush();
+		writer.close();
+	}
+
+	/**
+	 * 封装分页信息用于jqgrid
+	 * <ul>
+	 * <li>xhl 2016年5月18日 新建</li>
+	 * </ul>
+	 * 
+	 * @param dataMap
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	private int[] getParamPage(Map<String, Object> dataMap, Integer pageIndex, Integer pageSize) {
+		int[] pages = new int[2];
+		if (dataMap != null) {
+			Object page = dataMap.get("page");
+			Object rows = dataMap.get("rows");
+
+			if (page != null && rows != null) {
+				pages[0] = Integer.parseInt(page.toString());
+				pages[1] = Integer.parseInt(rows.toString());
+			}
+		}
+		if (pageIndex != null) {
+			pages[0] = pageIndex;
+		}
+		if (pageSize != null) {
+			pages[1] = pageSize;
+		}
+		if (pages[0] == 0 && pages[1] == 0) {
+			return null;
+		} else {
+			return pages;
+		}
+	}
+
+	/**
+	 * 封装查询参数 用于jqgrid
+	 * <ul>
+	 * <li>xhl 2016年5月18日 新建</li>
+	 * </ul>
+	 * 
+	 * @param dataMap
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
+	protected Map<String, Object> setSearchParam(Map<String, Object> dataMap, Integer pageIndex, Integer pageSize) {
+		int[] page = getParamPage(dataMap, pageIndex, pageSize);
+
+		if (page != null) {
+			dataMap.put("pageIndex", page[0]);
+			dataMap.put("pageSize", page[1]);
+		}
+
+		if (null != dataMap.get("sidx") && !"".equals(dataMap.get("sidx").toString().trim())) {
+			dataMap.put("orderBy", dataMap.get("sidx") + " " + dataMap.get("sord"));
+		}
+
+		/* 清除与jqgrid相关参数 */
+		dataMap.remove("page");
+		dataMap.remove("rows");
+		dataMap.remove("sidx");
+		dataMap.remove("sord");
+		dataMap.remove("_search");
+		dataMap.remove("nd");
+
+		return dataMap;
+	}
+
+	/**
+	 * 统一异常处理
+	 * <ul>
+	 * <li>xhl 2016年5月6日 新建</li>
+	 * </ul>
+	 * 
+	 * @param exception
+	 * @return
+	 * @throws IOException
+	 */
+	@ExceptionHandler
+	private Object exception(Exception exception) throws IOException {
+		Map<String, Object> map = new HashMap<>();
+
+		boolean writeJson = false;
+
+		/**
+		 * 判断是否是ajax请求，如果是返回json格式
+		 */
+		String ajax = request.getHeader("X-Requested-With");
+		if ("XMLHttpRequest".equals(ajax)) {
+			writeJson = true;
+		}
+
+		map = ExceptionDeal.exception(exception);
+		if (writeJson) {
+			writeJson(map.get("json"));
+		} else {
+			return map.get("url");
+		}
+		return "common/error/500";
+	}
+
+}

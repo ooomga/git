@@ -1,0 +1,56 @@
+package net.juntech.controller.system;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.juntech.constant.ProjectName;
+import net.juntech.controller.base.BaseController;
+import net.juntech.service.system.ISystemUserService;
+import net.juntech.util.UuidUtil;
+import net.juntech.util.zk.ClientProUtil;
+
+/**
+ * <ul>
+ * <li>xhl 2016年12月30日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+@RequestMapping(value = "system")
+public class SystemUserController extends BaseController {
+
+	// 跳转后台管理登陆
+	@RequestMapping(value = "toSystemLogin")
+	public String toSystemLogin() {
+
+		return "system/systemLogin";
+	}
+
+	// 后台管理登陆
+	@RequestMapping(value = "systemLogin")
+	public void systemLogin(@RequestParam Map<String, Object> param) throws IOException {
+		ISystemUserService systemUserService = ClientProUtil.createInterface(ISystemUserService.class, ProjectName.METROPOLIS_SYSTEM);
+		Map<String, Object> systemUser = systemUserService.selectSystemUser(param);
+		String password = param.get("password").toString();
+		Map<String, Object> result = new HashMap<>();
+		// 登陆失败
+		result.put("login", "0");
+		// 登陆成功
+		if (systemUser != null && password.equals(systemUser.get("password"))) {
+			result.put("login", "1");
+			session.setAttribute("user", systemUser);
+		}
+		writeJson(result);
+	}
+	
+	public static void main(String[] args) {
+		System.err.println(UuidUtil.generateUuid());
+	}
+
+}

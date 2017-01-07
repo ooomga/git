@@ -1,0 +1,10 @@
+一：	导入工程
+	断开svn连接，选中项目右键team下断开连接选择并从文件系统中删除svn信息
+
+二、修改项目名：	选中项目后按F2或者选中项目后右键选择refactor下的rename进行修改
+			选中项目后ctrl+h选中File Search后搜索原有项目名称，进行修改
+
+三、阅读doc下soa配置说明
+
+四、	运行项目后查看是否报错，不报错运行src/test/java下net.juntech.test.SoaClientTest.java的单元测试方法
+	运行完成后切换到运行项目的tomcat，查看是否打印日志，若打印相应日志即配置完成。

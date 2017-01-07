@@ -1,0 +1,17 @@
+package net.juntech.service.system;
+
+import java.util.Map;
+
+/**
+ * <ul>
+ * <li>xhl 2016年12月29日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+public interface ISystemUserService {
+
+	// 查询系统用户
+	Map<String, Object> selectSystemUser(Map<String, Object> param);
+
+}

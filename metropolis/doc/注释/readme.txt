@@ -1,0 +1,1 @@
+添加注释时需要设置eclipse主目录eclipse.ini文件，最后一行添加"-Duser.name=姓名或者代号"

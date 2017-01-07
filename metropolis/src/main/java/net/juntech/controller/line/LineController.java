@@ -1,0 +1,91 @@
+package net.juntech.controller.line;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import net.juntech.constant.ProjectName;
+import net.juntech.constant.ProjectNameConstant;
+import net.juntech.controller.base.BaseController;
+import net.juntech.service.station.ILineService;
+import net.juntech.service.station.IStationService;
+import net.juntech.service.system.IPermissionService;
+import net.juntech.util.ObjectUtil;
+import net.juntech.util.zk.ClientProUtil;
+
+/**
+ * <ul>
+ * <li>GQG 2016年12月27日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+public class LineController extends BaseController{
+	
+
+	@RequestMapping(value = "/line/toLine")
+	public String selectLineList(@RequestParam Map<String,Object> params) {
+		return "line.lineList";
+	}
+	@RequestMapping(value = "/line/getLineList")
+	@ResponseBody
+	public void getLineList(@RequestParam Map<String, Object> param) throws IOException {
+		super.setSearchParam(param, null, null);
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object>  resultMap = lineService.getLineList(param);
+		System.err.println(ObjectUtil.objToJson(resultMap));
+		writeGridJson(resultMap);
+	}
+
+	@RequestMapping(value="/line/toAddLine")
+	public String toAddLine(){
+		return "line/addLine";
+	}
+	@RequestMapping(value="/line/toModifyLine")
+	public String tomodifyLine(@RequestParam Map<String, Object> param,Model model){
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object>  resultMap = lineService.getLineList(param);
+		model.addAttribute("data", resultMap);
+		return "line/modifyLine";
+	}
+	@RequestMapping(value = "/line/saveLine")
+	@ResponseBody
+	public void saveLine(@RequestParam Map<String, Object> param) throws IOException {
+		super.setSearchParam(param, null, null);
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object> data = lineService.saveLine(param);
+	}
+	@RequestMapping(value = "/line/updateLine")
+	@ResponseBody
+	public void updateLine(@RequestParam Map<String, Object> param) throws IOException {
+		super.setSearchParam(param, null, null);
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object> data = lineService.updataLine(param);
+	}
+	
+	@RequestMapping(value="/line/deleteLine")
+	@ResponseBody
+	public void deleteLine(@RequestParam Map<String, Object> param){
+		super.setSearchParam(param, null, null);
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object> data = lineService.delLine(param);
+		IStationService stationService = ClientProUtil.createInterface(IStationService.class, ProjectNameConstant.METROPOLIS_STATION, "stationService");
+		Map<String, Object> sdata = stationService.delStationByLine(param);
+	}
+	
+	@RequestMapping(value="/line/viewLine")
+	@ResponseBody
+	public void viewLine(@RequestParam Map<String, Object> param,Model model){
+		super.setSearchParam(param, null, null);
+		ILineService lineService = ClientProUtil.createInterface(ILineService.class, ProjectNameConstant.METROPOLIS_STATION, "lineService");
+		Map<String, Object>  resultMap = lineService.getLineList(param);
+		model.addAttribute("data", resultMap);
+	}
+	
+}

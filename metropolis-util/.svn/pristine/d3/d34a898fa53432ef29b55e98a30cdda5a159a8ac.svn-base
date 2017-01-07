@@ -1,0 +1,33 @@
+package net.juntech.util;
+
+/**
+ * 积分
+ * <ul>
+ * <li>xhl 2017年1月2日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+public class GradeUtil {
+
+	public static String scoreGrade(Object score) {
+
+		if (score == null) {
+			return "V0";
+		}
+
+		int sc = Integer.parseInt(score.toString());
+		if (sc < 1000) {
+			return "V4";
+		} else if (sc < 600) {
+			return "V3";
+		} else if (sc < 400) {
+			return "V2";
+		} else if (sc < 100) {
+			return "V1";
+		} else {
+			return "V0";
+		}
+	}
+
+}

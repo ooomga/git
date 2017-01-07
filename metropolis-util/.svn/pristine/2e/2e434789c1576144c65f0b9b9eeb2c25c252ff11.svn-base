@@ -1,0 +1,53 @@
+package net.juntech.util;
+
+public class StringUtil {
+
+	public static String[] spritStr(String temp) {
+
+		if (temp != null && temp.length() > 0) {
+
+			String[] nameNumb = temp.split(",");
+			return nameNumb;
+		}
+		return null;
+
+	}
+
+	public static void main(String[] args) {
+		// System.out.println(DateUtil.getThisSeasonFirstTime(7));
+		// System.out.println(DateUtil.getThisSeasonFinallyTime(7));
+
+	}
+
+	/**
+	 * 判断字符串不为空
+	 * <ul>
+	 * <li>xhl 2016年6月23日 新建</li>
+	 * </ul>
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public static boolean isNull(Object object) {
+
+		if (null == object) {
+			return true;
+		}
+
+		if (object.toString().trim().length() <= 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static String sqlParamChange(String param) {
+		String[] params = param.split(",");
+		String temp = "";
+		for (String p : params) {
+			temp += "'" + p + "',";
+		}
+		temp = temp.substring(0, temp.length() - 1);
+		return temp;
+	}
+
+}

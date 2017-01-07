@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<html>
+<body>
+	<div>
+		<a href="###">车站管理</a>
+		<span>&gt;</span>
+		<a href="###">车站信息管理</a>
+	</div>
+	<div style="height: 40px; background-color: rgba(204, 204, 204, 1); line-height: 40px; padding-left: 30px; font-weight: bold;">车站管理</div>
+	<div style="height: 40px; line-height: 40px;">您管理的车站：莘庄站</div>
+	<hr />
+	<div>
+		<div>
+			出口信息
+			<button>编辑</button>
+		</div>
+		<div>
+			硬件设施
+			<button>编辑</button>
+		</div>
+		<div>
+			失物招领
+			<button>编辑</button>
+		</div>
+	</div>
+	<div>
+		<div style="height: 40px; background-color: rgba(204, 204, 204, 1); line-height: 40px; padding-left: 30px; font-weight: bold;">车站信息</div>
+	</div>
+	<%-- 表格 --%>
+	<div>
+		<%-- jqGrid 表格 --%>
+		<table id="gridTable"></table>
+		<%-- jqGrid 分页 --%>
+		<div id="gridPager"></div>
+	</div>
+
+	<%-- layer --%>
+	<script type="text/javascript" src="${base}/resources/plugIn/layer/layer.js"></script>
+	
+	<%-- 日期选择器 --%>
+	<script type="text/javascript" src="${base}/resources/plugIn/My97DatePicker/WdatePicker.js"></script>
+	
+	<%-- jqgrid js --%>
+	<script type="text/javascript" src="${base }/resources/plugIn/jqgrid/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="${base }/resources/plugIn/jqgrid/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="${base }/resources/plugIn/jqgrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript" src="${base }/resources/plugIn/jqgrid/js/jquery.jqGrid.extend.js"></script>
+	
+	<script type="text/javascript" src="${base }/resources/develop/js/station/station.manage.js"></script>
+</body>
+</html>

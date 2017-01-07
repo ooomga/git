@@ -1,0 +1,40 @@
+一、	将doc下soa下的env.rar压缩包解压后放到一个地址（如D:\env），若已经添加不需要重复添加
+	eclipse修改run下面run configurations选择你需要运行的服务器（如：tomcat）中arguments的VM arguments 下添加-Dglobal.config.path="你的evn磁盘地址"
+
+
+二、spring/spring-soa-service.xml
+	<!-- 一个项目配置一个 -->
+	<bean name="providerConfig" class="com.odianyun.soa.provider.ProviderConfig">
+		<!-- http://127.0.0.1:端口号/项目名/模块名/接口 与下面一一对应 -->
+		<!-- 公司(不需要变更) -->
+		<property name="domainName" value="juntech"></property>
+		<!--项目名 -->
+		<property name="serviceName" value="metropolis"></property>
+		<property name="assembleAppName" value="true"></property>
+		<!-- 模块名（项目下的具体模块如：订单[order]，用户[user]） -->
+		<property name="urlPattern" value="order"></property>
+		<!-- 端口号（本地tomcat端口），发布到服务器后改为服务器端口 -->
+		<property name="port" value="8080"></property>
+	</bean>
+
+	spring/spring-soa-service.xml
+	<!-- 暴露出去的接口 -->
+	<!-- bean-name 接口类名（统一命名规则：接口I代表字符去掉后第一个字母小写其余字母保持不变。如：IUserService命名userService,ITestService命名testService） -->
+	<bean name="/testService" class="com.odianyun.soa.provider.SoaWebserviceExporter">
+		<property name="providerConfig" ref="providerConfig"></property>
+		<!--需要映射的接口的实现类， ref：具体的service名称，即你的具体业务接口实现类的注入bean名称,默认即具体实现类的类名首字母小写-->
+		<property name="service" ref="test"></property>
+		<!-- 需要映射的接口类，value：具体的接口类-->
+		<property name="serviceInterface" value="net.juntech.service.test.ITestService"></property>
+		<!-- 版本 -->
+		<property name="serviceVersion" value="0.1"></property>
+	</bean>
+
+
+
+三、src/main/webapp/WEB-INF/web.xml
+<!-- 只需要修改下面的url-pattern中的地址（/模块名/*） ，该模块名与spring/spring-soa-service.xml中配置模块名相同-->
+<servlet-mapping>
+	<servlet-name>spring</servlet-name>
+	<url-pattern>/order/*</url-pattern>
+</servlet-mapping>

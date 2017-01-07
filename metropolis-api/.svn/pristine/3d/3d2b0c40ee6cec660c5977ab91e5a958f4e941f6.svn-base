@@ -1,0 +1,64 @@
+package net.juntech.controller.common;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import net.juntech.controller.base.BaseController;
+import net.juntech.util.RedisUtil;
+import net.juntech.util.SMSUtil;
+
+/**
+ * <ul>
+ * <li>xhl 2016年12月30日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+@RequestMapping(value = "mobile/common")
+public class CommonController extends BaseController {
+
+	private Log log = LogFactory.getLog(CommonController.class);
+
+	// 发送手机验证码
+	@RequestMapping(value = "sendMobileCode")
+	public void sendMobileCode(String json) throws IOException {
+		Map<String, Object> param = verify(json, true);
+		String code = SMSUtil.sendSMS(param.get("mobile"));
+		log.info("短信验证码：" + code);
+		RedisUtil.set(param.get("mobile").toString(), code);
+		Map<String, Object> result = new HashMap<>();
+		result.put("data", new HashMap<>());
+		result.put(MSG, "验证码已发送");
+		writeApiJson(new TreeMap<>(result), false);
+	}
+
+	// 验证验证码
+	@RequestMapping(value = "verifyMobileCode")
+	public void verifyMobileCode(String json) throws IOException {
+		Map<String, Object> param = verify(json, true);
+		Map<String, Object> result = new HashMap<>();
+		if (isNull(param.get("mobile")) || isNull(param.get("code"))) {
+			result.put(EMSG, "手机号或者验证码不能为空");
+		}
+		String mobile = param.get("mobile").toString();
+		String code = param.get("code").toString();
+		String redisCode = RedisUtil.get(mobile);
+		if (!code.equals(redisCode)) {
+			result.put(EMSG, "验证码错误");
+		} else {
+			RedisUtil.del(mobile);
+			result.put(MSG, "验证通过");
+		}
+		result.put("data", new HashMap<>());
+		writeApiJson(new TreeMap<>(result), false);
+	}
+
+}

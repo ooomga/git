@@ -1,0 +1,31 @@
+body,div{
+	margin:0px;
+	padding:0px;
+}
+
+.header{
+	height:68px;
+	background-color: grey;
+}
+.body{
+	width:100%;
+	height:87%;
+	border-color:blue;
+}
+.body>div{
+	float:left;
+}
+.menu{
+	width:10%;
+	height:100%;
+	border-color:red;
+	background-color: lightgrey;
+}
+.content{
+	float:right;
+	width:90%;
+	height:100%;
+}
+.footer{
+		border-top: 1px solid grey;
+}

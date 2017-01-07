@@ -1,0 +1,180 @@
+package net.juntech.controller.common;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+import net.juntech.controller.base.BaseController;
+import net.juntech.util.ObjectUtil;
+import net.juntech.util.UuidUtil;
+
+/**
+ * <ul>
+ * <li>xhl 2016年9月7日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+public class UploadController extends BaseController {
+
+	private Log log = LogFactory.getLog(UploadController.class);
+
+	/**
+	 * 文件上传
+	 * <ul>
+	 * <li>xhl 2016年9月7日 新建</li>
+	 * </ul>
+	 * 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "upload.htm", method = RequestMethod.POST)
+	public void upload() throws IOException {
+		Map<String, Object> result = new HashMap<>();
+		MultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+		MultipartHttpServletRequest multipartRequest = resolver.resolveMultipart(request);
+
+		Iterator<String> iterator = multipartRequest.getFileNames();
+		Boolean isRename = Boolean.valueOf(multipartRequest.getParameter("isRename"));
+
+		while (iterator.hasNext()) {
+			String fileName = iterator.next();
+			MultipartFile multipartFile = multipartRequest.getFile(fileName);
+			byte[] bs = null;
+			try {
+				bs = multipartFile.getBytes();
+				copyFile(bs, multipartFile.getOriginalFilename(), isRename);
+			} catch (IOException e) {
+				result.put("error", "文件上传失败");
+				throw e;
+			}
+		}
+		writeJson(result);
+	}
+
+	/**
+	 * 复制文件
+	 * <ul>
+	 * <li>xhl 2016年9月8日 新建</li>
+	 * </ul>
+	 * 
+	 * @param bs
+	 *            文件byte数组
+	 * @param fileName
+	 *            文件名称
+	 * @param isRename
+	 *            是否重命名
+	 * @throws IOException
+	 */
+	private void copyFile(byte[] bs, String fileName, Boolean isRename) throws IOException {
+		String filepath = abstractPath + "/upload/temp/";
+		File file = new File(filepath);
+		if (!file.exists()) { // 文件夹不存在则创建
+			file.mkdirs();
+		}
+		if (null != isRename && isRename) {
+			String suff = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+			fileName = System.currentTimeMillis() + suff;
+		}
+		FileOutputStream out = new FileOutputStream(filepath + fileName);
+		out.write(bs);
+		out.close();
+	}
+
+	/**
+	 * 文件下载
+	 * <ul>
+	 * <li>xhl 2016年9月7日 新建</li>
+	 * </ul>
+	 * 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "download.htm")
+	public void download(String filePath) throws IOException {
+		downloadLocal(filePath);
+	}
+
+	/**
+	 * 下载本地文件
+	 * <ul>
+	 * <li>xhl 2016年9月7日 新建</li>
+	 * </ul>
+	 * 
+	 * @throws IOException
+	 *
+	 */
+	private void downloadLocal(String filePath) throws IOException {
+		InputStream inputStream;
+		try {
+			inputStream = new FileInputStream(filePath);
+		} catch (FileNotFoundException e) {
+			log.error("下载文件不存在");
+			throw e;
+		}
+
+		byte[] b = new byte[100];
+		int len;
+		try {
+			while ((len = inputStream.read(b)) > 0) {
+				response.getOutputStream().write(b, 0, len);
+			}
+			inputStream.close();
+		} catch (IOException e) {
+			log.error("文件下载失败", e);
+			throw e;
+		}
+	}
+
+	/**
+	 * 下载网络文件
+	 * <ul>
+	 * <li>xhl 2016年9月7日 新建</li>
+	 * </ul>
+	 *
+	 */
+	public void downloadNet() {
+
+	}
+
+	@RequestMapping(value = "jqgridDataList")
+	public void jqgridDataList(@RequestParam Map<String, Object> param) throws IOException {
+		super.setSearchParam(param, null, null);
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, Object>> maps = new ArrayList<>();
+		for (int i = 0; i < 26; i++) {
+			map = new HashMap<>();
+			map.put("a", i + "a");
+			map.put("b", i + "b");
+			map.put("c", i + "c");
+			maps.add(map);
+		}
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("list", maps);
+		result.put("pageIndex", param.get("pageIndex"));
+		result.put("totalPage", 3);
+		result.put("totalRecords", 26);
+		System.err.println(ObjectUtil.objToJson(result));
+		writeGridJson(result);
+	}
+
+}

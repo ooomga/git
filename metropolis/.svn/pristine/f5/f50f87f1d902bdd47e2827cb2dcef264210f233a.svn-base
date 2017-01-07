@@ -1,0 +1,81 @@
+var dataGrid;
+var extraData ={};
+$(function(){
+	dataGrid = new DataGrid({
+		pageid:"#gridTable"
+		,pager:"#gridPager"
+		,postData:extraData
+		,datatype:'json'
+		,url: base + "/message/getMessageList"
+		,colNames : ['信息ID','信息标题','信息内容','建立日期','状态','发布日期','操作']
+		,colModel:[
+           {width:'10%',align:'center',name:'seq',sortable:true,index:'seq'},
+           {width:'10%',align:'center',name:'title',sortable:false,index:'title'},
+           {width:'10%',align:'center',name:'content',sortable:false,index:'content'},
+           {width:'10%',align:'center',name:'createTime',sortable:false,index:'createTime'},
+           {width:'10%',align:'center',name:'publish',sortable:false,index:'publish',formatter:publishState},
+           {width:'10%',align:'center',name:'publishTime',sortable:false,index:'publishTime'},
+           {width:'20%',align:'center',name:'id',sortable:false,index:'id',formatter:Operate}
+        ]
+        ,sortname:"date"
+        ,sortorder:"asc"
+        ,rownumbers:true
+		,multiselect:false
+	});
+	
+	dataGrid.setLabel('0','序号');
+	function Operate(cellvalue, options, message){
+		var html = "";
+		if(message.publish == 0){
+			html += '	<a id="modifyBtn" href="javascript:void(0)" onclick="publicMessage(&quot;'+message.seq+'&quot;)"  >发布</a>&nbsp;&nbsp;&nbsp;';
+		}
+		return html.replace("undefined", "");
+	}
+	function publishState(cellvalue, options, message){
+		var html = "";
+		if(message.publish == 1){
+			html += '<span>已发布</span>';
+		}
+		html += '<span>未发布</span>';
+		return html.replace("undefined", "");
+	}
+	
+	$(document).on("click",".js-search",function(){
+		dataGrid.search(extraData);
+	});
+	search = function (){
+		dataGrid.search(extraData);
+	}
+});
+var addMessageWin;
+
+function getMessageList(){
+	dataGrid.search(extraData);
+}
+function addMessage(){
+	//iframe窗
+	addMessageWin = layer.open({
+	      type: 2,
+	      title: '添加信息',
+	      shadeClose: false,
+	      shade: 0.2,
+	      maxmin: true, //开启最大化最小化按钮
+	      area: ['800px', '50%'],
+	      content: base+"/message/toAddMessage"
+	    });
+}
+function publicMessage(seq){
+	//iframe窗
+	addLineWin = layer.open({
+	      type: 2,
+	      title: '修改线路',
+	      shadeClose: false,
+	      shade: 0.2,
+	      maxmin: true, //开启最大化最小化按钮
+	      area: ['800px', '90%'],
+	      content: base+"/line/toModifyLine?seq="+seq
+	    });
+}
+
+
+

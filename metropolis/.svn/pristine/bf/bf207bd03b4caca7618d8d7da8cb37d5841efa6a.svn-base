@@ -1,0 +1,33 @@
+package net.juntech.controller.system;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import net.juntech.controller.base.BaseController;
+
+/**
+ * <ul>
+ * <li>xhl 2016年12月30日 新建</li>
+ * <li>{@link #方法名自动提示}功能描述,方便查找方法</li>
+ * </ul>
+ *
+ */
+@Controller
+@RequestMapping(value = "system")
+public class SystemUserController extends BaseController {
+
+	// 跳转后台管理登陆
+	@RequestMapping(value = "toSystemLogin")
+	public String toSystemLogin() {
+
+		return "system/systemLogin";
+	}
+
+	// 后台管理登陆
+	@RequestMapping(value = "systemLogin")
+	public String systemLogin() {
+
+		return "system/systemLogin";
+	}
+
+}

@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
+<link rel="stylesheet" type="text/css" href="${base }/resources/develop/css/menu.css" />
+<div>
+	<ul class="root-ul">
+		<li>
+			会员管理
+			<ul class="son-ul">
+				<li>
+					查看会员信息
+					</a>
+				</li>
+				<li>实名认证管理</li>
+			</ul>
+		</li>
+		<li>
+			线路管理
+			<ul class="son-ul">
+				<li>线路管理</li>
+			</ul>
+		</li>
+		<li>
+			车站管理
+			<ul class="son-ul">
+				<li>
+					<a href="${base }/toStationManage?channel=station_manage">车站信息管理</a>
+				</li>
+				<li>
+					<a href="${base }/toExitManage?channel=station_exit">出口信息管理</a>
+				</li>
+				<li>硬件设施管理</li>
+				<li>失物招领管理</li>
+			</ul>
+		</li>
+		<li>
+			资讯管理
+			<ul class="son-ul">
+				<li>咨询管理</li>
+			</ul>
+		</li>
+		<li>
+			票务管理
+			<ul class="son-ul">
+				<li>购票记录管理</li>
+				<li>车票种类管理</li>
+			</ul>
+		</li>
+		<li>
+			时刻表管理
+			<ul class="son-ul">
+				<li>时刻表导入</li>
+			</ul>
+		</li>
+		<li>
+			事件上报管理
+			<ul class="son-ul">
+				<li>志愿者记录管理</li>
+				<li>志愿者规则管理</li>
+			</ul>
+		</li>
+		<li>
+			商品管理
+			<ul class="son-ul">
+				<li>爱心雨伞记录</li>
+			</ul>
+		</li>
+		<li>
+			积分管理
+			<ul class="son-ul">
+				<li>商品管理</li>
+				<li>积分流水管理</li>
+				<li>积分规则管理</li>
+			</ul>
+		</li>
+		<li>
+			信息管理
+			<ul class="son-ul">
+				<li>公式信息管理</li>
+				<li>站内信内容管理</li>
+				<li>触发规则管理</li>
+			</ul>
+		</li>
+		<li>
+			系统设置
+			<ul class="son-ul">
+				<li>敏感词管理</li>
+			</ul>
+		</li>
+		<li>
+			权限管理
+			<ul class="son-ul">
+				<li>权限管理</li>
+				<li>行政权限</li>
+			</ul>
+		</li>
+	</ul>
+
+</div>
