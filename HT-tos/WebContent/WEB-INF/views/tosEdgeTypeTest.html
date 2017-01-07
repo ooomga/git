@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Custom Edge</title>
+<meta charset="UTF-8">
+<style>
+html, body {
+	background:#15518f;
+	padding: 0px;
+	margin: 0px;
+}
+
+.main {
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+</style>
+
+<script src="../js/ht/core/ht.js"></script>
+<script src="../js/ht/ParsePointsInfo.js"></script>
+<script src="../js/ht/plugin/ht-flow.js"></script>
+<script src="../js/ht/plugin/ht-edgetype.js"></script>
+<script src="../js/ht/parsePointsInfo.js"></script>
+<script src="../js/ht/tosEdgeType.js"></script>
+<script src="../js/style.js"></script>
+
+<script>
+	function init() {
+
+		dataModel = new ht.DataModel();
+		graphView = new ht.graph.GraphView(dataModel);
+		graphView.setLayers([ 1, 2]);
+		view = graphView.getView();
+		view.className = 'main';
+		document.body.appendChild(view);
+		window.addEventListener('resize', function(e) {
+			graphView.invalidate();
+		}, false);
+		
+		var points1 = [//slope1
+			             {'position':{x:400,y:400},type:0,corner:{x:500,y:400}},
+			             {'position':{x:600,y:500},type:1},
+			             ];
+		var points2 = [//slope2
+			             {'position':{x:400,y:400},type:0,corner:{x:500,y:400}},
+			             {'position':{x:600,y:300},type:1},
+			             ];
+		var points3 = [//slope3
+			             {'position':{x:400,y:400},type:0,corner:{x:400,y:500}},
+			             {'position':{x:300,y:600},type:1},
+			             ];
+		var points4 = [//slope4
+			             {'position':{x:400,y:400},type:0,corner:{x:400,y:500}},
+			             {'position':{x:500,y:600},type:1},
+			             ];
+		var points5 = [//slope5
+			             {'position':{x:400,y:400},type:0,corner:{x:200,y:400}},
+			             {'position':{x:400,y:400},type:1},
+			             ];
+		var points6 = [//slope5
+			             {'position':{x:400,y:400},type:0,corner:{x:400,y:600}},
+			             {'position':{x:500,y:600},type:1},
+			             ];
+			var point1 = points6[0];
+			var point2 = points6[1];
+			var node1 = createNode(point1);
+			var node2 = createNode(point2);
+			
+			var edge = new ht.Edge(node1, node2,true);
+			edge.s(edgeStyle_slope1);//根据线段类型设置样式
+			edge.setLayer(1);
+			edge.s(flowEdgeStyle);//设置流动样式
+			edge.s('edge.color' , 'lightgrey');
+			edge.s("flow.reverse",true);//流动反向
+	    	dataModel.add(edge);
+			var edge1 = new ht.Edge(node1, node2);
+			edge1.s(edgeStyle_slope1);//根据线段类型设置样式
+			edge1.s(flowEdgeStyle);//设置流动样式
+			edge1.setLayer(1);
+			edge1.setAttr('isNext',true);
+			dataModel.add(edge1);
+			var edge2 = new ht.Edge(node1, node2);
+			edge2.s('edge.type','edgeHV_bg');
+			edge2.s('edge.color','black');
+			edge2.s('edge.width',2);
+			edge2.setLayer(1);
+			dataModel.add(edge2);
+			graphView.enableFlow(60);
+			
+	}
+	
+	function createNode(point){
+		var node = new ht.Node();
+		node.setWidth(13);
+		node.setHeight(13);
+		node.setPosition(point.position.x,point.position.y);
+		node.s(nodeStyle);
+		if(point.corner){
+			node.a('corner',point.corner);
+		}
+		node.setLayer(1);
+		dataModel.add(node);
+		return node;
+	}
+
+</script>
+</head>
+<body onload="init();">
+</body>
+</html>

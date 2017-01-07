@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Custom Edge</title>
+<meta charset="UTF-8">
+<style>
+html, body {
+	background:#15518f;
+	padding: 0px;
+	margin: 0px;
+}
+
+.main {
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+</style>
+
+<script src="../js/ht/core/ht.js"></script>
+<script src="../js/ht/plugin/ht-flow.js"></script>
+
+<script>
+	function init() {
+
+		ht.Default
+				.setEdgeType(
+						'slope',
+						function(edge, gap, graphView, sameSourceWithFirstEdge) {
+							var sourceNode = edge.getSourceAgent();
+							var corner = sourceNode._attrObject.corner;
+							var targetNode = edge.getTargetAgent();
+							var points = new ht.List();
+							var sp = sourceNode.getPosition();
+							var tp = targetNode.getPosition();
+							points.add({x:sp.x,y:sp.y});
+							points.add({
+								x : corner.x+35,
+								y : corner.y+5
+							});
+							points.add({
+								x : corner.x-35,
+								y : corner.y-20
+							});
+							points.add({x:tp.x,y:tp.y});
+							
+							var dx = tp.x-sp.x,
+								dy = tp.y-sp.y;
+							points.each(function(p){
+								p.x = p.x+gap*(dy>0?-1:1);
+								p.y = p.y+gap*(dx>0?1:-1);
+							});
+
+							return {
+								points : points,
+								segments : new ht.List([ 1, 4])
+							};
+						});
+
+		dataModel = new ht.DataModel();
+		graphView = new ht.graph.GraphView(dataModel);
+		graphView.setLayers([ 1, 2]);
+
+		view = graphView.getView();
+		view.className = 'main';
+		document.body.appendChild(view);
+		window.addEventListener('resize', function(e) {
+			graphView.invalidate();
+		}, false);
+		
+		var points = [
+			             {'position':{x:200,y:200},type:1,corner:{x:280,y:200}},
+			             {'position':{x:400,y:300},type:0},
+			             ];
+			var nodeStyle = {
+					'width':15,
+					'height':15,
+					'shape':'circle',
+					'shape.border.color':'#c8c8c8',
+					'shape.background':'white',
+					'shape.border.width':6,
+					'select.width':0
+			}
+			var point1 = points[0];
+			var point2 = points[1];
+			var node1 = new ht.Node();
+			var node2 = new ht.Node();
+			node1.setWidth(15);
+			node1.setHeight(15);
+			node1.setPosition(point1.position.x,point1.position.y);
+			node1.s(nodeStyle);
+			node1.a('corner',point1.corner);
+			node1.setLayer(1);
+			dataModel.add(node1);
+			node2.setWidth(15);
+			node2.setHeight(15);
+			node2.setPosition(point2.position.x,point2.position.y);
+			node2.s(nodeStyle);
+			node2.setLayer(1);
+			dataModel.add(node2);
+			var edge = new ht.Edge(node1, node2);
+			edge.s({
+				'edge.type' : 'slope',
+				'edge.color' : '#00ebb3',
+				'edge.width' : 3,
+				'edge.lable':'test',
+				'edge.gap':10
+			});
+			var edgeStyle = {
+                    'note': '11',
+                    'note.color':'white',
+                    'note.background':'red',
+                    'note.position': 17,
+                    'note.offset.x': 0,
+                    'note.offset.y': 0                   
+                };
+			edge.setLayer(1);
+			edge.s("flow", true);
+			edge.s("flow.element.shadow.max", 4);
+			edge.s("flow.element.shadow.min", 4);
+			edge.s("flow.element.count", 1);
+			edge.s(edgeStyle);
+			edge.s("flow.element.max", 4);
+			edge.s("flow.element.background", "white");
+	    	dataModel.add(edge);
+			var edge1 = new ht.Edge(node1, node2);
+			edge1.s({
+				'edge.type' : 'slope',
+				'edge.color' : '#00ebb3',
+				'edge.width' : 3,
+				'edge.gap':10
+			});
+			edge1.setLayer(1);
+			edge1.s("flow", true);
+			edge1.s("flow.reverse", true);
+			edge1.s("flow.element.shadow.visible", true);
+			edge1.s("flow.element.shadow.max", 4);
+			edge1.s("flow.element.shadow.min", 4);
+			edge1.s("flow.element.count", 1);
+			edge1.s("flow.element.max", 4);
+			edge1.s("flow.element.shadow.begincolor", "#00ebb3");
+			edge1.s("flow.element.shadow.endcolor", "white");
+			dataModel.add(edge1);
+			graphView.enableFlow(60);
+	}
+
+	function createNode() {
+		var node = new ht.Node();
+		node.s({
+			'shape' : 'circle',
+			'opacity' : 0.5,
+			'select.type' : 'circle'
+		});
+		node.setLayer('nodeLayer');
+		node.setSize(20, 20);
+		return node;
+	}
+</script>
+</head>
+<body onload="init();">
+</body>
+</html>
