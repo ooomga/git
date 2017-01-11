@@ -11,6 +11,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/metropolis-api/target/classes"/>
-        <property name="context-root" value="metropolis"/>
+        <property name="context-root" value="metropolis-api"/>
     </wb-module>
 </project-modules>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import net.juntech.constant.ProjectName;
 import net.juntech.controller.base.BaseController;
 import net.juntech.service.richtext.IRichTextService;
+import net.juntech.util.Config;
 import net.juntech.util.DateUtil;
 import net.juntech.util.zk.ClientProUtil;
 
@@ -46,7 +47,7 @@ public class InfoController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> maps = richTextService.getRichTextList(param);
 		for (Map<String, Object> map : (List<Map<String, Object>>) maps.get("list")) {
-			map.put("image_full", fullPath + map.get("image"));
+			map.put("image_full", fullWebPath + map.get("image"));
 			map.put("grapType", "1");
 			map.put("url", fullWebPath + "/richtext/viewRichText?id=" + map.get("id"));
 			map.remove("seq");

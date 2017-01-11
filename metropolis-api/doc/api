@@ -187,10 +187,12 @@ code：
 		source				积分来源（1签到，2事件上报）
 	返回值：
 		{
-		    "code": 400,
-		    "data": {},
-		    "emsg": "已经签到，不能重复签到",
-		    "msg": ""
+		    "code": 200,
+		    "data": {
+		        "score": 1151
+		    },
+		    "emsg": "",
+		    "msg": "签到成功"
 		}
 积分流水
 	/mobile/socre/listSocreAll

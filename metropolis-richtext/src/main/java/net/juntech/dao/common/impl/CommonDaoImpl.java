@@ -2,6 +2,7 @@ package net.juntech.dao.common.impl;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -305,7 +306,13 @@ public class CommonDaoImpl implements ICommonDao {
 
 	@Override
 	public Map<String, Object> queryForMap(String sql, Map<String, Object> params) {
-		return this.namedParameterJdbcTemplate.queryForMap(sql, params);
+		Map<String, Object> map = new HashMap<>();
+		try {
+			map = this.namedParameterJdbcTemplate.queryForMap(sql, params);
+		} catch (Exception e) {
+			log.error("查询数据不存在");
+		}
+		return map;
 	}
 
 	@Override

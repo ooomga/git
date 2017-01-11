@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import net.juntech.constant.ProjectName;
 import net.juntech.controller.base.BaseController;
 import net.juntech.service.user.IScoreService;
+import net.juntech.service.user.IUserService;
 import net.juntech.util.zk.ClientProUtil;
 
 /**
@@ -36,7 +37,10 @@ public class UserScoreController extends BaseController {
 		} else {
 			int row = scoreService.insertScore(params);
 			if (row != 0) {
+				IUserService userService = ClientProUtil.createInterface(IUserService.class, ProjectName.METROPOLIS_USER);
+				Map<String, Object> map = userService.selectScore(params);
 				reult.put(MSG, "签到成功");
+				reult.put("data", map);
 			} else {
 				reult.put(EMSG, "签到失败");
 			}

@@ -90,10 +90,6 @@ public class UuidUtil {
 
 	public static void main(String[] args) throws UnknownHostException {
 		System.out.println(generateUuid());
-		System.out.println(generateUuid());
-		System.out.println(generateUuid());
-		System.out.println(generateUuid());
-		System.out.println(generateUuid());
 	}
 
 }

@@ -46,7 +46,7 @@ public class RedisUtil {
 		JedisPoolConfig config = new JedisPoolConfig();
 		config.setMaxTotal(20);
 		config.setMaxIdle(5);
-		config.setMaxWaitMillis(1000l);
+		config.setMaxWaitMillis(2000l);
 		config.setTestOnBorrow(false);
 
 		jedisPool = new JedisPool(config, Constants.REDIS_URL, Constants.REDIS_PORT);
@@ -136,7 +136,7 @@ public class RedisUtil {
 		} catch (Exception e) {
 
 			LOGGER.error(e.getMessage());
-			return "0";
+			throw e;
 		} finally {
 			returnResource();
 		}

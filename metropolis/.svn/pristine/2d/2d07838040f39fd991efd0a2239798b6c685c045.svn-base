@@ -1,5 +1,0 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" isELIgnored="false"%>
-<div>
-	<a href="javascript:void(0)">首页</a><br>
-</div>

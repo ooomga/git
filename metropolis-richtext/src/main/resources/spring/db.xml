@@ -37,9 +37,6 @@
 		<!-- **********************事务********************** -->
 		<!-- 是否开启自动提交 default:true -->
 		<property name="defaultAutoCommit" value="true" />
-		<property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}" />
-		<property name="testOnBorrow" value="${dbcp.testOnBorrow}" />
-		<property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}" />
 	</bean>
 
 	<!-- JDBC -->

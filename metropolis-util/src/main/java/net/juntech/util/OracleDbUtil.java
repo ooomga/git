@@ -1,15 +1,10 @@
 package net.juntech.util;
 
-import org.apache.log4j.chainsaw.Main;
-
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,14 +24,9 @@ public class OracleDbUtil {
 	private static String user = "iamviewer";// 用户名
 	private static String password = "Shmetro2016";// 密码
 	
-//	private static String driver = "com.mysql.jdbc.Driver";
-//	private static String url = "jdbc:mysql://localhost:3306/metropolis";
-//	private static String user = "root";// 用户名
-//	private static String password = "root";// 密码
-	
 	private static PreparedStatement sta = null;
 	private static ResultSet rs = null;
-
+	
 	/**
 	 * 加载驱动程序
 	 */
@@ -118,7 +108,7 @@ public class OracleDbUtil {
 	 * 
 	 * @return
 	 */
-	public static List<Map<String, Object>> getWagesList(String sql) {
+	public static List<Map<String, Object>> getStaffCompanyList(String sql) {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		ResultSet res = null;		
 		try {

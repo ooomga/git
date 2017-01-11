@@ -26,4 +26,7 @@ public interface IUserService {
 	// 查询用户集合（分页）
 	Map<String, Object> selectUserList(Map<String, Object> param);
 
+	// 查询现有积分
+	Map<String, Object> selectScore(Map<String, Object> params);
+
 }
